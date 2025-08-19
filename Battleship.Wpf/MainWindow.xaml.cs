@@ -135,16 +135,21 @@ namespace Battleship.Wpf
                 {
                     case CellState.Empty:
                         btn.Background = Brushes.LightBlue;
+                        btn.Content = "";
                         break;
                     case CellState.Ship:
                         btn.Background = Brushes.Navy;
+                        btn.Content = "";
                         break;
                     case CellState.Miss:
                         btn.Background = Brushes.LightGray;
+                        btn.Content = "•";
+                        btn.Foreground = Brushes.Black;
                         btn.IsEnabled = false;
                         break;
                     case CellState.Hit:
                         btn.Background = Brushes.Red;
+                        btn.Content = "";
                         btn.IsEnabled = false;
                         break;
                 }
@@ -162,11 +167,17 @@ namespace Battleship.Wpf
                 {
                     case CellState.Miss:
                         btn.Background = Brushes.LightGray;
+                        btn.Content = "•";
+                        btn.Foreground = Brushes.Black;
                         btn.IsEnabled = false;
                         break;
                     case CellState.Hit:
                         btn.Background = Brushes.Red;
+                        btn.Content = "";
                         btn.IsEnabled = false;
+                        break;
+                    default:
+                        btn.Content = "";
                         break;
                 }
             }
