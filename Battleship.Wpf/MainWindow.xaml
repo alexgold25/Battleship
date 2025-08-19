@@ -10,7 +10,8 @@
         <Style x:Key="CellButtonStyle" TargetType="Button">
             <Setter Property="Width" Value="30" />
             <Setter Property="Height" Value="30" />
-            <Setter Property="Margin" Value="1" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="FontSize" Value="16" />
             <Setter Property="Background" Value="LightBlue" />
             <Setter Property="BorderBrush" Value="Gray" />
             <Setter Property="Template">
@@ -51,8 +52,86 @@
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <UniformGrid x:Name="playerGrid" Rows="10" Columns="10" />
-            <UniformGrid x:Name="enemyGrid" Grid.Column="2" Rows="10" Columns="10" />
+
+            <!-- Player board with headers -->
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
+                    <TextBlock Text="A" Width="30" TextAlignment="Center" />
+                    <TextBlock Text="B" Width="30" TextAlignment="Center" />
+                    <TextBlock Text="C" Width="30" TextAlignment="Center" />
+                    <TextBlock Text="D" Width="30" TextAlignment="Center" />
+                    <TextBlock Text="E" Width="30" TextAlignment="Center" />
+                    <TextBlock Text="F" Width="30" TextAlignment="Center" />
+                    <TextBlock Text="G" Width="30" TextAlignment="Center" />
+                    <TextBlock Text="H" Width="30" TextAlignment="Center" />
+                    <TextBlock Text="I" Width="30" TextAlignment="Center" />
+                    <TextBlock Text="J" Width="30" TextAlignment="Center" />
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0">
+                    <TextBlock Text="1" Height="30" TextAlignment="Center" />
+                    <TextBlock Text="2" Height="30" TextAlignment="Center" />
+                    <TextBlock Text="3" Height="30" TextAlignment="Center" />
+                    <TextBlock Text="4" Height="30" TextAlignment="Center" />
+                    <TextBlock Text="5" Height="30" TextAlignment="Center" />
+                    <TextBlock Text="6" Height="30" TextAlignment="Center" />
+                    <TextBlock Text="7" Height="30" TextAlignment="Center" />
+                    <TextBlock Text="8" Height="30" TextAlignment="Center" />
+                    <TextBlock Text="9" Height="30" TextAlignment="Center" />
+                    <TextBlock Text="10" Height="30" TextAlignment="Center" />
+                </StackPanel>
+
+                <UniformGrid x:Name="playerGrid" Grid.Row="1" Grid.Column="1" Rows="10" Columns="10" />
+            </Grid>
+
+            <!-- Enemy board with headers -->
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
+                    <TextBlock Text="A" Width="30" TextAlignment="Center" />
+                    <TextBlock Text="B" Width="30" TextAlignment="Center" />
+                    <TextBlock Text="C" Width="30" TextAlignment="Center" />
+                    <TextBlock Text="D" Width="30" TextAlignment="Center" />
+                    <TextBlock Text="E" Width="30" TextAlignment="Center" />
+                    <TextBlock Text="F" Width="30" TextAlignment="Center" />
+                    <TextBlock Text="G" Width="30" TextAlignment="Center" />
+                    <TextBlock Text="H" Width="30" TextAlignment="Center" />
+                    <TextBlock Text="I" Width="30" TextAlignment="Center" />
+                    <TextBlock Text="J" Width="30" TextAlignment="Center" />
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0">
+                    <TextBlock Text="1" Height="30" TextAlignment="Center" />
+                    <TextBlock Text="2" Height="30" TextAlignment="Center" />
+                    <TextBlock Text="3" Height="30" TextAlignment="Center" />
+                    <TextBlock Text="4" Height="30" TextAlignment="Center" />
+                    <TextBlock Text="5" Height="30" TextAlignment="Center" />
+                    <TextBlock Text="6" Height="30" TextAlignment="Center" />
+                    <TextBlock Text="7" Height="30" TextAlignment="Center" />
+                    <TextBlock Text="8" Height="30" TextAlignment="Center" />
+                    <TextBlock Text="9" Height="30" TextAlignment="Center" />
+                    <TextBlock Text="10" Height="30" TextAlignment="Center" />
+                </StackPanel>
+
+                <UniformGrid x:Name="enemyGrid" Grid.Row="1" Grid.Column="1" Rows="10" Columns="10" />
+            </Grid>
         </Grid>
         <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="10" HorizontalAlignment="Center">
             <TextBlock Text="Корабли игрока:" />
