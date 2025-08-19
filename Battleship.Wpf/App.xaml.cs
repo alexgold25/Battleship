@@ -2,7 +2,7 @@
 using System.Data;
 using System.Windows;
 
-namespace Battleship.WPF
+namespace Battleship.Wpf
 {
     /// <summary>
     /// Interaction logic for App.xaml

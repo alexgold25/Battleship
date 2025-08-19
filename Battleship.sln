@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36401.2 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Battleship.WPF", "Battleship.WPF\Battleship.WPF.csproj", "{36FEAB68-8445-4001-8957-3C15BDEF3190}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Battleship.Wpf", "Battleship.Wpf\Battleship.Wpf.csproj", "{36FEAB68-8445-4001-8957-3C15BDEF3190}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Battleship.Core", "Battleship.Core\Battleship.Core.csproj", "{1880C920-17D7-4423-A932-22D7C76368ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Battleship.Blazor", "Battleship.Blazor\Battleship.Blazor.csproj", "{86C8252C-CACC-4B3C-9CEC-AC956716BF24}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{36FEAB68-8445-4001-8957-3C15BDEF3190}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36FEAB68-8445-4001-8957-3C15BDEF3190}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36FEAB68-8445-4001-8957-3C15BDEF3190}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1880C920-17D7-4423-A932-22D7C76368ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1880C920-17D7-4423-A932-22D7C76368ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1880C920-17D7-4423-A932-22D7C76368ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1880C920-17D7-4423-A932-22D7C76368ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86C8252C-CACC-4B3C-9CEC-AC956716BF24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86C8252C-CACC-4B3C-9CEC-AC956716BF24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86C8252C-CACC-4B3C-9CEC-AC956716BF24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86C8252C-CACC-4B3C-9CEC-AC956716BF24}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
