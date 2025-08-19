@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Battleship.Core;
+using CoreOrientation = Battleship.Core.Orientation;
 
 namespace Battleship.Wpf
 {
@@ -13,7 +14,7 @@ namespace Battleship.Wpf
         private readonly Button[,] _enemyButtons = new Button[Board.Size, Board.Size];
         private readonly int[] _shipSizes = { 4, 3, 3, 2, 2, 2, 1, 1, 1, 1 };
         private int _currentShipIndex = 0;
-        private Orientation _currentOrientation = Orientation.Horizontal;
+        private CoreOrientation _currentOrientation = CoreOrientation.Horizontal;
 
         public MainWindow()
         {
@@ -120,7 +121,7 @@ namespace Battleship.Wpf
 
         private void Rotate_Click(object sender, RoutedEventArgs e)
         {
-            _currentOrientation = _currentOrientation == Orientation.Horizontal ? Orientation.Vertical : Orientation.Horizontal;
+            _currentOrientation = _currentOrientation == CoreOrientation.Horizontal ? CoreOrientation.Vertical : CoreOrientation.Horizontal;
         }
 
         private void UpdatePlayerView()
