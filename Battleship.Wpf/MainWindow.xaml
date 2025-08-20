@@ -3,141 +3,289 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Battleship.Wpf"
         mc:Ignorable="d"
-        Title="Battleship" Height="600" Width="800">
+        Title="Battleship" Height="640" Width="960"
+        UseLayoutRounding="True" SnapsToDevicePixels="True"
+        TextOptions.TextFormattingMode="Display"
+        Background="#0F1720">
+
     <Window.Resources>
-        <Style x:Key="CellButtonStyle" TargetType="Button">
-            <Setter Property="Width" Value="30" />
-            <Setter Property="Height" Value="30" />
-            <Setter Property="Margin" Value="0" />
-            <Setter Property="FontSize" Value="16" />
-            <Setter Property="Background" Value="LightBlue" />
-            <Setter Property="BorderBrush" Value="Gray" />
+        <!-- Палитра -->
+        <SolidColorBrush x:Key="ColBg"     Color="#0F1720"/>
+        <SolidColorBrush x:Key="ColCard"   Color="#121C26"/>
+        <SolidColorBrush x:Key="ColGrid"   Color="#1C2A36"/>
+        <SolidColorBrush x:Key="ColText"   Color="#E6E6E6"/>
+        <SolidColorBrush x:Key="ColSub"    Color="#A7B0B8"/>
+        <SolidColorBrush x:Key="ColPrimary" Color="#3D6DFF"/>
+        <SolidColorBrush x:Key="ColAccent"  Color="#317FBE"/>
+        <SolidColorBrush x:Key="ColHit"     Color="#E55353"/>
+        <SolidColorBrush x:Key="ColMissDot" Color="#8A99A6"/>
+        <SolidColorBrush x:Key="ColFog"     Color="#15202B"/>
+
+        <!-- Карточка -->
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource ColCard}"/>
+            <Setter Property="CornerRadius" Value="14"/>
+            <Setter Property="Padding" Value="12"/>
+            <Setter Property="BorderBrush" Value="#0E141B"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+        </Style>
+
+        <!-- Кнопка (скруглённая) -->
+        <Style TargetType="Button" x:Key="PrimaryButton">
+            <Setter Property="Foreground" Value="{StaticResource ColText}"/>
+            <Setter Property="Background" Value="#243143"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="Margin" Value="6,0,0,0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="border" CornerRadius="4" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <Border x:Name="bd" Background="{TemplateBinding Background}"
+                                CornerRadius="10">
+                            <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="LightSkyBlue" />
+                                <Setter TargetName="bd" Property="Background" Value="{StaticResource ColPrimary}"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="border" Property="Opacity" Value="0.6" />
+                                <Setter TargetName="bd" Property="Opacity" Value="0.55"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <!-- Ячейка поля: 29px + margin 0.5 => визуальный зазор ≈1px -->
+        <Style x:Key="CellButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="29"/>
+            <Setter Property="Height" Value="29"/>
+            <Setter Property="Margin" Value="0.5"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="{StaticResource ColFog}"/>
+            <Setter Property="Foreground" Value="{StaticResource ColText}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#1B2A3A"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="bd" Property="Opacity" Value="0.80"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Заголовки ячеек: буквы и цифры строго по центру -->
+        <Style x:Key="HeaderText" TargetType="TextBlock">
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{StaticResource ColSub}"/>
+            <Setter Property="FontFamily" Value="Cascadia Mono, Consolas, Courier New"/>
+            <Setter Property="Typography.NumeralAlignment" Value="Tabular"/>
+            <Setter Property="Typography.NumeralStyle" Value="Lining"/>
+            <Setter Property="FontSize" Value="13"/>
+        </Style>
     </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Margin="10" Grid.Row="0">
-            <Button x:Name="btnAutoPlace" Click="AutoPlace_Click">Авторасстановка</Button>
-            <Button x:Name="btnStart" Click="Start_Click" Margin="5,0,0,0" IsEnabled="False">Начать игру</Button>
-            <Button x:Name="btnRotate" Click="Rotate_Click" Margin="5,0,0,0">Повернуть</Button>
-            <TextBlock Text="Ход:" Margin="20,0,0,0" />
-            <TextBlock x:Name="txtTurn" Margin="5,0,0,0" />
-        </StackPanel>
-        <Grid Grid.Row="1" Margin="10">
+
+        <!-- Верхняя панель -->
+        <DockPanel Margin="16" Grid.Row="0">
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                <Button x:Name="btnNew" Style="{StaticResource PrimaryButton}" Click="New_Click" Margin="0,0,8,0">Новая игра</Button>
+                <Button x:Name="btnAutoPlace" Style="{StaticResource PrimaryButton}" Click="AutoPlace_Click">Авторасстановка</Button>
+                <Button x:Name="btnStart" Style="{StaticResource PrimaryButton}" Click="Start_Click" IsEnabled="False">Начать игру</Button>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                <TextBlock Text="Ход:" Foreground="{StaticResource ColSub}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <TextBlock x:Name="txtTurn" Foreground="{StaticResource ColText}" FontWeight="Bold" VerticalAlignment="Center"/>
+            </StackPanel>
+        </DockPanel>
+
+        <!-- Две карточки с полями -->
+        <Grid Grid.Row="1" Margin="16,6">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition Width="20" />
-                <ColumnDefinition />
+                <ColumnDefinition/>
+                <ColumnDefinition Width="28"/>
+                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <!-- Player board with headers -->
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="30" />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="30" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
+            <!-- Левая карточка -->
+            <Border Style="{StaticResource Card}" Grid.Column="0">
+                <Grid>
+                    <!-- сетка 11x11: первая строка/колонка — заголовки -->
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="30"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-                <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
-                    <TextBlock Text="A" Width="30" TextAlignment="Center" />
-                    <TextBlock Text="B" Width="30" TextAlignment="Center" />
-                    <TextBlock Text="C" Width="30" TextAlignment="Center" />
-                    <TextBlock Text="D" Width="30" TextAlignment="Center" />
-                    <TextBlock Text="E" Width="30" TextAlignment="Center" />
-                    <TextBlock Text="F" Width="30" TextAlignment="Center" />
-                    <TextBlock Text="G" Width="30" TextAlignment="Center" />
-                    <TextBlock Text="H" Width="30" TextAlignment="Center" />
-                    <TextBlock Text="I" Width="30" TextAlignment="Center" />
-                    <TextBlock Text="J" Width="30" TextAlignment="Center" />
-                </StackPanel>
+                    <!-- хедеры -->
+                    <Grid Grid.Row="0" Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="30"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="A" Grid.Column="0"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="B" Grid.Column="1"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="C" Grid.Column="2"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="D" Grid.Column="3"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="E" Grid.Column="4"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="F" Grid.Column="5"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="G" Grid.Column="6"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="H" Grid.Column="7"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="I" Grid.Column="8"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="J" Grid.Column="9"/>
+                    </Grid>
 
-                <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0">
-                    <TextBlock Text="1" Height="30" TextAlignment="Center" />
-                    <TextBlock Text="2" Height="30" TextAlignment="Center" />
-                    <TextBlock Text="3" Height="30" TextAlignment="Center" />
-                    <TextBlock Text="4" Height="30" TextAlignment="Center" />
-                    <TextBlock Text="5" Height="30" TextAlignment="Center" />
-                    <TextBlock Text="6" Height="30" TextAlignment="Center" />
-                    <TextBlock Text="7" Height="30" TextAlignment="Center" />
-                    <TextBlock Text="8" Height="30" TextAlignment="Center" />
-                    <TextBlock Text="9" Height="30" TextAlignment="Center" />
-                    <TextBlock Text="10" Height="30" TextAlignment="Center" />
-                </StackPanel>
+                    <Grid Grid.Row="1" Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="1"  Grid.Row="0"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="2"  Grid.Row="1"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="3"  Grid.Row="2"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="4"  Grid.Row="3"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="5"  Grid.Row="4"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="6"  Grid.Row="5"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="7"  Grid.Row="6"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="8"  Grid.Row="7"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="9"  Grid.Row="8"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="10" Grid.Row="9"/>
+                    </Grid>
 
-                <UniformGrid x:Name="playerGrid" Grid.Row="1" Grid.Column="1" Rows="10" Columns="10" />
-            </Grid>
+                    <!-- поле игрока -->
+                    <Border Grid.Row="1" Grid.Column="1" Background="{StaticResource ColGrid}" CornerRadius="10" Padding="6">
+                        <UniformGrid x:Name="playerGrid" Rows="10" Columns="10"/>
+                    </Border>
+                </Grid>
+            </Border>
 
-            <!-- Enemy board with headers -->
-            <Grid Grid.Column="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="30" />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="30" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
+            <!-- Правая карточка -->
+            <Border Style="{StaticResource Card}" Grid.Column="2">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="30"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-                <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
-                    <TextBlock Text="A" Width="30" TextAlignment="Center" />
-                    <TextBlock Text="B" Width="30" TextAlignment="Center" />
-                    <TextBlock Text="C" Width="30" TextAlignment="Center" />
-                    <TextBlock Text="D" Width="30" TextAlignment="Center" />
-                    <TextBlock Text="E" Width="30" TextAlignment="Center" />
-                    <TextBlock Text="F" Width="30" TextAlignment="Center" />
-                    <TextBlock Text="G" Width="30" TextAlignment="Center" />
-                    <TextBlock Text="H" Width="30" TextAlignment="Center" />
-                    <TextBlock Text="I" Width="30" TextAlignment="Center" />
-                    <TextBlock Text="J" Width="30" TextAlignment="Center" />
-                </StackPanel>
+                    <Grid Grid.Row="0" Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="30"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="A" Grid.Column="0"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="B" Grid.Column="1"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="C" Grid.Column="2"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="D" Grid.Column="3"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="E" Grid.Column="4"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="F" Grid.Column="5"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="G" Grid.Column="6"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="H" Grid.Column="7"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="I" Grid.Column="8"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="J" Grid.Column="9"/>
+                    </Grid>
 
-                <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0">
-                    <TextBlock Text="1" Height="30" TextAlignment="Center" />
-                    <TextBlock Text="2" Height="30" TextAlignment="Center" />
-                    <TextBlock Text="3" Height="30" TextAlignment="Center" />
-                    <TextBlock Text="4" Height="30" TextAlignment="Center" />
-                    <TextBlock Text="5" Height="30" TextAlignment="Center" />
-                    <TextBlock Text="6" Height="30" TextAlignment="Center" />
-                    <TextBlock Text="7" Height="30" TextAlignment="Center" />
-                    <TextBlock Text="8" Height="30" TextAlignment="Center" />
-                    <TextBlock Text="9" Height="30" TextAlignment="Center" />
-                    <TextBlock Text="10" Height="30" TextAlignment="Center" />
-                </StackPanel>
+                    <Grid Grid.Row="1" Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="1"  Grid.Row="0"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="2"  Grid.Row="1"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="3"  Grid.Row="2"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="4"  Grid.Row="3"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="5"  Grid.Row="4"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="6"  Grid.Row="5"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="7"  Grid.Row="6"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="8"  Grid.Row="7"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="9"  Grid.Row="8"/>
+                        <TextBlock Style="{StaticResource HeaderText}" Text="10" Grid.Row="9"/>
+                    </Grid>
 
-                <UniformGrid x:Name="enemyGrid" Grid.Row="1" Grid.Column="1" Rows="10" Columns="10" />
-            </Grid>
+                    <Border Grid.Row="1" Grid.Column="1" Background="{StaticResource ColGrid}" CornerRadius="10" Padding="6">
+                        <UniformGrid x:Name="enemyGrid" Rows="10" Columns="10"/>
+                    </Border>
+                </Grid>
+            </Border>
         </Grid>
-        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="10" HorizontalAlignment="Center">
-            <TextBlock Text="Корабли игрока:" />
-            <TextBlock x:Name="txtPlayerShips" Margin="5,0,20,0" />
-            <TextBlock Text="Корабли компьютера:" />
-            <TextBlock x:Name="txtEnemyShips" Margin="5,0,0,0" />
-        </StackPanel>
+
+        <!-- Компактная нижняя панель -->
+        <DockPanel Grid.Row="2" Margin="16,6,16,12">
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" VerticalAlignment="Center">
+                <TextBlock Text="Корабли игрока:" Foreground="{StaticResource ColSub}" Margin="0,0,8,0"/>
+                <ProgressBar x:Name="pbPlayerShips" Width="160" Height="10" Maximum="10" Value="10" Background="#0E141B" Foreground="{StaticResource ColPrimary}" BorderBrush="#000" BorderThickness="0" />
+                <TextBlock x:Name="txtPlayerShips" Foreground="{StaticResource ColSub}" Margin="8,0,0,0"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center">
+                <TextBlock Text="Корабли компьютера:" Foreground="{StaticResource ColSub}" Margin="0,0,8,0"/>
+                <ProgressBar x:Name="pbEnemyShips" Width="160" Height="10" Maximum="10" Value="10" Background="#0E141B" Foreground="{StaticResource ColPrimary}" BorderBrush="#000" BorderThickness="0" />
+                <TextBlock x:Name="txtEnemyShips" Foreground="{StaticResource ColSub}" Margin="8,0,0,0"/>
+            </StackPanel>
+        </DockPanel>
     </Grid>
 </Window>
